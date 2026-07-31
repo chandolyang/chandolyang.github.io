@@ -6,7 +6,7 @@ html {
 
 /* DARK MODE (New Default) */
 :root {
-  --bg-image: url('bwubg_dark.png');
+  --bg-image: url('assets/bwubg_dark.png');
   --bg-overlay: rgba(13, 15, 18, 0);
   --card-bg: rgba(22, 25, 32, 0.8);
   --card-hover-bg: rgba(30, 35, 45, 0.95);
@@ -21,7 +21,7 @@ html {
 
 /* LIGHT MODE OVERRIDES */
 [data-theme="light"] {
-  --bg-image: url('bwubg_light.png');
+  --bg-image: url('assets/bwubg_light.png');
   --bg-overlay: rgba(255, 255, 255, 0);
   --card-bg: rgba(255, 255, 255, 0.75);
   --card-hover-bg: rgba(255, 255, 255, 0.9);
