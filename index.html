@@ -3,52 +3,180 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Charley Yang Hub</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="theme.js"></script>
+  
+  <!-- Primary Meta Tags -->
+  <title>Charley Yang Hub | BoyWithUke, Chandol & Music Directory</title>
+  <meta name="title" content="Charley Yang Hub | BoyWithUke, Chandol & Music Directory">
+  <meta name="description" content="The ultimate fan hub for Charley Yang (BoyWithUke & Chandol). Access photos, discography, streaming links, and project archives in one place.">
+  <meta name="keywords" content="Charley Yang, BoyWithUke, Chandol, Charley Yang photos, Charley Yang discography, Charley Yang music, charyang.vip">
+  <meta name="author" content="charyang.vip">
+  <meta name="theme-color" content="#000000">
+
+  <!-- Advanced Crawler Directives -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow">
+  <link rel="canonical" href="https://charyang.vip/">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+
+  <!-- Open Graph / Facebook / Discord Previews -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Charley Yang Hub">
+  <meta property="og:url" content="https://charyang.vip/">
+  <meta property="og:title" content="Charley Yang Hub | BoyWithUke & Chandol Fan Directory">
+  <meta property="og:description" content="Explore photos, music, and project archives for Charley Yang (BoyWithUke & Chandol).">
+  <meta property="og:image" content="https://charyang.vip/assets/logos/boywithuke/darkmode.png">
+  <meta property="og:image:alt" content="Charley Yang Hub Directory">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card Data -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://charyang.vip/">
+  <meta name="twitter:title" content="Charley Yang Hub | BoyWithUke & Chandol Fan Directory">
+  <meta name="twitter:description" content="Explore photos, music, and project archives for Charley Yang (BoyWithUke & Chandol).">
+  <meta name="twitter:image" content="https://charyang.vip/assets/logos/boywithuke/darkmode.png">
+
+  <!-- Favicons & Manifest -->
   <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Style & Deferred Scripts -->
+  <link rel="stylesheet" href="style.css">
+  <script src="theme.js" defer></script>
+
+  <!-- CSS Utilities for SEO and Responsive Images -->
+  <style>
+    /* Visually hidden elements for search bots & screen readers */
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    /* Ensures logos maintain native aspect ratio and never stretch */
+    .hub-card img {
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+  </style>
+
+  <!-- Schema Knowledge Graph (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://charyang.vip/#website",
+        "url": "https://charyang.vip/",
+        "name": "Charley Yang Hub",
+        "description": "The ultimate fanmade repository and link directory for Charley Yang.",
+        "inLanguage": "en-US"
+      },
+      {
+        "@type": "Person",
+        "@id": "https://charyang.vip/#charley-yang",
+        "name": "Charley Yang",
+        "alternateName": ["BoyWithUke", "Chandol"],
+        "jobTitle": "Musician",
+        "description": "Indie/pop artist known as BoyWithUke and Chandol.",
+        "sameAs": [
+          "https://www.youtube.com/@boywithuke",
+          "https://open.spotify.com/artist/112f2P82723321",
+          "https://www.instagram.com/boywithuke"
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://charyang.vip/#navigation",
+        "name": "Charley Yang Hub Navigation",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "BoyWithUke Section",
+            "url": "https://charyang.vip/boywithuke"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Chandol Section",
+            "url": "https://charyang.vip/chandol"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Photo Gallery",
+            "url": "https://charyang.vip/photos"
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "Discography",
+            "url": "https://charyang.vip/discography"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
-  <!-- Toggle Switch Button -->
-  <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+  <!-- Theme Switcher -->
+  <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark and light theme mode">
     <span>Toggle Theme</span>
   </button>
 
   <header>
     <h1>Charley Yang Hub</h1>
-    <p>The fanmade hub for everything about Charley Yang! From links to photos to songs.</p>
+    <p>The ultimate fanmade hub for everything Charley Yang! Explore links, photo galleries, and full discography for BoyWithUke and Chandol.</p>
   </header>
 
+  <!-- Main Grid with Invisible H2 Headers for Crawlers -->
   <main class="hub-grid">
-    <!-- Link to BoyWithUke Page -->
-      <a href="boywithuke" class="hub-card logo-card">
-      <img src="assets/logos/boywithuke/lightmode.png" alt="BoyWithUke Logo Light" class="logo-light" />
-      <img src="assets/logos/boywithuke/darkmode.png" alt="BoyWithUke Logo Dark" class="logo-dark" />
+    
+    <!-- BoyWithUke Link -->
+    <a href="boywithuke" class="hub-card logo-card" aria-label="BoyWithUke Section">
+      <h2 class="sr-only">BoyWithUke Songs & Archives</h2>
+      <img src="assets/logos/boywithuke/lightmode.png" alt="BoyWithUke Logo (Light Mode)" class="logo-light" />
+      <img src="assets/logos/boywithuke/darkmode.png" alt="BoyWithUke Logo (Dark Mode)" class="logo-dark" />
     </a>
 
-    <!-- Link to Chandol Page (Dynamic Light/Dark Logo) -->
-    <a href="chandol" class="hub-card logo-card">
-      <img src="assets/logos/chandol/lightmode.png" alt="Chandol Logo Light" class="logo-light" />
-      <img src="assets/logos/chandol/darkmode.png" alt="Chandol Logo Dark" class="logo-dark" />
+    <!-- Chandol Link -->
+    <a href="chandol" class="hub-card logo-card" aria-label="Chandol Section">
+      <h2 class="sr-only">Chandol Music & Projects</h2>
+      <img src="assets/logos/chandol/lightmode.png" alt="Chandol Logo (Light Mode)" class="logo-light" />
+      <img src="assets/logos/chandol/darkmode.png" alt="Chandol Logo (Dark Mode)" class="logo-dark" />
     </a>
 
-
-    <a href="photos" class="hub-card">
-      <img src="assets/logos/camera/lightmode.png" alt="Chandol Logo Light" class="logo-light" />
-      <img src="assets/logos/camera/darkmode.png" alt="Chandol Logo Dark" class="logo-dark" />
+    <!-- Photos Link -->
+    <a href="photos" class="hub-card" aria-label="Photo Gallery">
+      <h2 class="sr-only">Charley Yang Photo Gallery</h2>
+      <img src="assets/logos/camera/lightmode.png" alt="Photos Gallery Icon (Light Mode)" class="logo-light" />
+      <img src="assets/logos/camera/darkmode.png" alt="Photos Gallery Icon (Dark Mode)" class="logo-dark" />
     </a>
 
-    <a href="discography" class="hub-card">
-      <img src="assets/logos/discog/lightmode.png" alt="Chandol Logo Light" class="logo-light" />
-      <img src="assets/logos/discog/darkmode.png" alt="Chandol Logo Dark" class="logo-dark" />
+    <!-- Discography Link -->
+    <a href="discography" class="hub-card" aria-label="Music Discography">
+      <h2 class="sr-only">Complete Music Discography</h2>
+      <img src="assets/logos/discog/lightmode.png" alt="Discography Icon (Light Mode)" class="logo-light" />
+      <img src="assets/logos/discog/darkmode.png" alt="Discography Icon (Dark Mode)" class="logo-dark" />
     </a>
+
   </main>
+
   <footer>
-    <p>"charyang.vip" is not associated with Charley Yang, or anyone apart of Charley's team/family.</p>
+    <p><small>"charyang.vip" is an independent fan project and is not affiliated with, endorsed by, or associated with Charley Yang or his official team.</small></p>
   </footer>
+
 </body>
 </html>
