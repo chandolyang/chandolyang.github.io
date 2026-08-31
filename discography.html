@@ -3,26 +3,566 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Charley Yang Hub</title>
+  <title>Charley Yang Hub - Discography</title>
   <link rel="stylesheet" href="style.css">
-  <script src="theme.js"></script>
+  <script src="theme.js" defer></script>
   <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
+  
+  <style>
+    .hub-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    .hub-container h1 {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .hub-container > p {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .artist-section {
+      text-align: center;
+      margin-bottom: 60px;
+      width: 100%;
+    }
+    
+    .section-title {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 10px;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      font-size: 2rem;
+      color: var(--text);
+    }
+
+    .release-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 2vw;
+      margin-top: 20px;
+      align-items: stretch;
+    }
+
+    @media (min-width: 1200px) {
+      .release-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+    
+    .release-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      height: 100%;
+      box-sizing: border-box;
+      
+      /* Force GPU rendering for smoother hover effects */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      will-change: transform;
+    }
+    
+    .release-card:hover {
+      /* translateZ(0) kept here so the animation stays hardware accelerated */
+      transform: scale(1.02) translateZ(0);
+      border-color: var(--accent);
+    }
+    
+    .release-cover {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background-color: var(--border);
+    }
+    
+    .release-info {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .release-title {
+      font-size: clamp(1rem, 1.5vw, 1.1rem);
+      font-weight: 700;
+      margin: 0 0 5px 0;
+      color: var(--text);
+      line-height: 1.3;
+      transition: color 0.3s;
+    }
+    
+    .release-date {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin: 0;
+      margin-top: auto; 
+      transition: color 0.3s;
+    }
+
+    .popout-menu {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      /* Fixed background variable and added safe blur */
+      background: var(--card-hover-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+      z-index: 10;
+    }
+    
+    .release-card.active .popout-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .action-btn {
+      display: inline-block;
+      background-color: var(--accent);
+      color: #ffffff;
+      padding: 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+    }
+    
+    .action-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .action-btn.secondary {
+      background-color: transparent;
+      border: 2px solid var(--border);
+      color: var(--text);
+    }
+
+    .action-btn.secondary:hover {
+      background-color: var(--border);
+      border-color: var(--accent);
+    }
+  </style>
+
+  <script>
+    function toggleActions(element) {
+      document.querySelectorAll('.release-card.active').forEach(card => {
+        if (card !== element) card.classList.remove('active');
+      });
+      element.classList.toggle('active');
+    }
+
+    function stopPropagation(event) {
+      event.stopPropagation();
+    }
+
+    document.addEventListener('click', function(event) {
+      if (!event.target.closest('.release-card')) {
+        document.querySelectorAll('.release-card.active').forEach(card => {
+          card.classList.remove('active');
+        });
+      }
+    });
+  </script>
 </head>
 <body>
-  <!-- Home Button (Top Left) -->
   <a href="redirectmain.html" class="home-btn" aria-label="Home Page">
     <span>Home</span>
   </a>
 
-  <!-- Toggle Switch Button (Top Right) -->
-  <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+  <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark and light theme mode">
     <span>Toggle Theme</span>
   </button>
 
-<h1>Coming Soon.</h1>
+  <div class="hub-container">
+    <h1>Charley Yang Discography</h1>
+    <p>Click any release to view links.</p>
+
+    <section class="artist-section">
+      <h2 class="section-title">BoyWithUke</h2>
+      <div class="release-grid">
+        
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Melatonin_Dreams.jpg" alt="Melatonin Dreams" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Melatonin Dreams</h4>
+            <p class="release-date">January 22, 2021</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/melatonin-dreams/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Trouvaille.jpg" alt="Trouvaille" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Trouvaille (EP)</h4>
+            <p class="release-date">March 5, 2021</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/trouvaille/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Small_Fry.jpg" alt="Small Fry" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Small Fry</h4>
+            <p class="release-date">April 2, 2021</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/small-fry-single/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Fever_Dreams.jpg" alt="Fever Dreams" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Fever Dreams</h4>
+            <p class="release-date">June 4, 2021</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/fever-dreams/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Faded.jpg" alt="Faded" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Faded (EP)</h4>
+            <p class="release-date">September 10, 2021</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/faded/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Toxic.jpg" alt="Toxic" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Toxic</h4>
+            <p class="release-date">October 29, 2021</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/toxic/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Long_Drives.jpg" alt="Long Drives" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Long Drives</h4>
+            <p class="release-date">January 21, 2022</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/long-drives/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/idgaf.jpg" alt="IDGAF" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">IDGAF (ft. blackbear)</h4>
+            <p class="release-date">March 18, 2022</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/idgaf/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Serotonin_Dreams.jpg" alt="Serotonin Dreams" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Serotonin Dreams</h4>
+            <p class="release-date">May 6, 2022</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/serotonin-dreams/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Sick_Of_U.jpg" alt="Sick of U" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Sick of U (ft. Oliver Tree)</h4>
+            <p class="release-date">September 30, 2022</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/sick-of-u/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Rockstar.jpg" alt="Rockstar" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Rockstar</h4>
+            <p class="release-date">February 10, 2023</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/rockstar/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Antisocial.jpg" alt="Antisocial" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Antisocial (EP)</h4>
+            <p class="release-date">February 24, 2023</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/antisocial/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Out_of_Reach.jpg" alt="Out of Reach" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Out of Reach</h4>
+            <p class="release-date">April 7, 2023</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/out-of-reach/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Trauma.jpg" alt="Trauma" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Trauma</h4>
+            <p class="release-date">August 4, 2023</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/trauma/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Migraine.jpg" alt="Migraine" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Migraine</h4>
+            <p class="release-date">September 22, 2023</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/migraine/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Lucid_Dreams.jpg" alt="Lucid Dreams" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Lucid Dreams</h4>
+            <p class="release-date">October 6, 2023</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/lucid-dreams/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Can_You_Feel_It.jpg" alt="Can You Feel It" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Can You Feel It?</h4>
+            <p class="release-date">May 31, 2024</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/can-you-feel-it/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Ghost.jpg" alt="Ghost" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Ghost</h4>
+            <p class="release-date">August 1, 2024</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/ghost/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Gaslight.jpg" alt="Gaslight" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Gaslight</h4>
+            <p class="release-date">October 11, 2024</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/gaslight/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Burnout.jpg" alt="Burnout" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Burnout</h4>
+            <p class="release-date">November 15, 2024</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/burnout/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/Burnout_Digital_Deluxe.jpg" alt="Burnout Deluxe" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Burnout (Digital Deluxe Exclusive)</h4>
+            <p class="release-date">November 21, 2024</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://archive.org/details/boywithukeburnout_digital-deluxe" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/BoyWithUke/B_Sides.jpg" alt="B Sides" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">BoyWithUke: B Sides</h4>
+            <p class="release-date">September 5, 2025</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/boywithuke-b-sides/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="artist-section">
+      <h2 class="section-title">chandol</h2>
+      <div class="release-grid">
+        
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/chandol/Breakfast_In_Bed.jpg" alt="Breakfast in Bed" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Breakfast in Bed</h4>
+            <p class="release-date">May 22, 2026</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/breakfast-in-bed/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/chandol/2002.jpg" alt="2002" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">2002</h4>
+            <p class="release-date">June 12, 2026</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/2002/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/chandol/Whats_The_Rush.jpg" alt="What's The Rush" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">What's The Rush?</h4>
+            <p class="release-date">June 20, 2026</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/whats-the-rush/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+        <div class="release-card" onclick="toggleActions(this)">
+          <img src="https://ik.imagekit.io/charyang/AlbumCovers/chandol/Mercurial.jpg" alt="Mercurial" class="release-cover" loading="lazy" decoding="async">
+          <div class="release-info">
+            <h4 class="release-title">Mercurial</h4>
+            <p class="release-date">July 10, 2026</p>
+          </div>
+          <div class="popout-menu">
+            <a href="https://smartlinkmaker.com/album/mercurial/" class="action-btn" target="_blank" onclick="stopPropagation(event)">Download / Stream</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">View Tabs</a>
+            <a href="wip" class="action-btn secondary" target="_blank" onclick="stopPropagation(event)">Assets</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
   <footer>
     <p>"charyang.vip" is not associated with Charley Yang, or anyone apart of Charley's team/family.</p>
   </footer>
